@@ -90,7 +90,7 @@ echo -e "\n"
 
 sleep 3
 
-nmap -sCV $IP -v -T5 -p 8443,9000,9001 -oA $BOXDIR/nmap/initial
+nmap -sCV $IP -v -T4 -oA $BOXDIR/nmap/initial
 
 
 echo -e "\n"
