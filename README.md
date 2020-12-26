@@ -10,6 +10,19 @@ Before you start make sure that the following directories exist:
 
 ./start_new_room
 
-Output with example input
+# Screen with example input
+
+![Screenshot](input.png)
+
+# When the script is finishing
+
+![Screenshot](start_new_room.png)
+
+# The notes beeing opened at the end and they look like this.
+
+![Screenshot](notes.png)
 
 
+# It´s super handy when you use terminator with split screen layout. So you can start with gobuster and other tools.
+
+![Screenshot](terminator.png)
