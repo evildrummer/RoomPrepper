@@ -15,17 +15,6 @@ YELLOW='\033[0;33m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
-# check for arguments at start
-#if [[ $# -ne 3 ]] ; then
-#    echo -e "\n"
-#    echo -e "${RED} -- Syntax: SCRIPT PLATFORM(THM or HTB) IP NAME-OF-BOX -- ${NC}"
-#    echo -e "${GREEN}--> Example: ./start_new_room.sh THM 1.2.3.4 Meltdown <--${NC}"
-#
-#	exit 0
-#fi
-
-
-
 
 
 # set variables
