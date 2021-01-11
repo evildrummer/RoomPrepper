@@ -56,6 +56,7 @@ sleep 2
 # ~/PLATFORM/HOSTNAME
 # ~/PLATFORM/HOSTNAME/nmap
 
+
 echo -e "\n"
 echo -e "${YELLOW}------------------------${NC}"
 echo -e "${YELLOW}- Creating directories -${NC}"
@@ -108,9 +109,11 @@ echo -e "[open ports]" >> $BOXDIR/notes.md
 
 sleep 1
 
-echo "--> import remaining template"
+echo "--> import remaining template and files"
 cat fillin.txt >> $BOXDIR/notes.md
 cat notes_template.md >> $BOXDIR/notes.md
+cp createList.sh $BOXDIR
+chmod +x $BOXDIR/createList.sh
 
 sleep 1
 
