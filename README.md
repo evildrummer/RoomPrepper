@@ -23,7 +23,7 @@ Before you start make sure that the following directories exist:
 
 ![Screenshot](images/start_new_room.png)
 
-# The notes beeing opened at the end and they look like this.
+# The notes will be opened at the end and they look like this.
 
 ![Screenshot](images/notes.png)
 
