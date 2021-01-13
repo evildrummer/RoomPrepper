@@ -1,5 +1,5 @@
 # RoomPrepper
-A simple script to create folders and a notes file. I use it for Tryhackme and Hackthebox
+A simple script to create folders and a notes file. I use it for TryhackMe and HackTheBox
 
 Before you start make sure that the following directories exist:
 ~/THM (for TryHackme)
