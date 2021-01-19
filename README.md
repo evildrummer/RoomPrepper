@@ -6,6 +6,8 @@ Before you start make sure that the following directories exist:
 ~/HTB (for HackTheBox)
 
 [Changelog:latest]
+- added folder screenshot
+- added second try for IP after ping
 - added createLists.sh
 -> now you can execute createLists.sh to generate a user.lst and password.lst (i.e. for hydra)
 - added check for already existing folders of the machine (i.e. HackAllTheThings)
