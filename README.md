@@ -15,7 +15,7 @@ Before you start make sure that the following directories exist:
 
 ## Usage:
 
-./start_new_room 
+./start_new_room  
 ./createLists.sh (to create a user.lst & password.lst out of your notes.md)
 
 ## Screen with example input
