@@ -6,6 +6,7 @@ Before you start make sure that the following directories exist:
 ~/HTB (for HackTheBox)
 
 [Changelog:latest]
+- looking for installaed xcopy and puts IP in clipbaord for further commands i.e. gobuster
 - added folder screenshot
 - added second try for IP after ping
 - added createLists.sh
