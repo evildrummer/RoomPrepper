@@ -51,7 +51,7 @@ echo $IP > ip.txt
 if ping -q -c 1 -W 1 $IP >/dev/null; then
 
         echo -e "${GREEN}Host is reachable${NC}"
-        echo -e "${GREEN}Die IP lautet: $IP${NC}"
+        echo -e "${GREEN}IP of host is: $IP${NC}"
 
 
     else
