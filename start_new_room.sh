@@ -5,9 +5,9 @@
 # ~/HTB (for HackTheBox)
 # 
 #
-# Put the script and the notes_template.md in the same directory
+# Put the script and the folder 'files' in the same directory
 #
-# Usage: script.sh $PLATFORM $IP $HOSTNAME
+# Usage: ./start_new_room
 #
 # Setting colored output
 RED='\033[0;31m'
@@ -55,6 +55,9 @@ if ping -q -c 1 -W 1 $IP >/dev/null; then
 
 
     else
+
+# Chance to start openvpn and hit enter ping again or change ip after typo
+
         echo -e "${RED}Host is NOT reachable${NC}"
         read -p 'Starting VPN Connection first or type in IP again and hit enter to continue (last value = '$IP') : ' IP2
 
@@ -147,8 +150,8 @@ sleep 1
 
 echo "--> import remaining template and files"
 cat fillin.txt >> $BOXDIR/notes.md
-cat notes_template.md >> $BOXDIR/notes.md
-cp createLists.sh $BOXDIR
+cat files/notes_template.md >> $BOXDIR/notes.md
+cp files/createLists.sh $BOXDIR
 chmod +x $BOXDIR/createLists.sh
 
 
