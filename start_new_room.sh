@@ -48,7 +48,7 @@ BOXDIR_GLOBAL=~/$PLATFORM/$HOST
 read -p 'Type in the IP address for the machine (e.g. 10.11.12.3): ' IP
 
 if [ -x "$(command -v xclip)" ]; then
-  echo $IP | xclip -selection clipboard
+  echo -n $IP | xclip -selection clipboard
 fi
 
 clear
