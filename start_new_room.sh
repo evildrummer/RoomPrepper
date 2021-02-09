@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Pause for debugging
+#f_Pause(){
+#
+# read -n1 -rsp $'Press any key to continue or Ctrl+C to exit...\n'
+#
+#}
+
+
 # Before you start make sure that the following directories exist:
 # ~/THM (for TryHackme)
 # ~/HTB (for HackTheBox)
@@ -15,78 +23,102 @@ YELLOW='\033[0;33m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
-pause(){
+# set variables and base folders
+#read -p 'Which platform are you using (THM / HTB / VULNHUB) ?: ' PLATFORM
 
- read -n1 -rsp $'Press any key to continue or Ctrl+C to exit...\n'
+while [ ! -f platform.txt ]; do
+    echo 'Available platforms ...'
+    echo '[1] - TryHackMe '
+    echo '[2] - HackTheBox '
+    echo '[3] - Vulnhub '
+    read -p 'Choose platform or cancel script: [1] [2] [3] [E]xit: ' -a array
+    for choice in "${array[@]}"; do
+        case "$choice" in
+            [1]* ) echo -e "Selected $choice for THM" ; echo THM > platform.txt && break;;
+            [2]* ) echo -e "Selected $choice for HTB" ; echo HTB > platform.txt && break ;;
+            [3]* ) echo -e "Selected $choice for VULN" ; echo VULN > platform.txt && break ;;
+            [Ee]* ) echo "exited by user" && exit 0;;
+            * ) echo "404 - Option not found" && exit 0;;
+        esac
+    done
+done
 
-}
-
-
-# set variables
-read -p 'Which platform are you using (THM or HTB) ?: ' PLATFORM
-read -p 'Enter the name of the machine (e.g. HackPark): ' HOST
-BOXDIR=~/$PLATFORM/$HOST
-
-# check if directory already exists
-if test -d $BOXDIR; then
-
-	echo -e "${RED}Directory already exists !${NC}"
-	exit 0
+PLATFORM=$(cat platform.txt)
+PLATFORMDIR=~/$PLATFORM
+if [ ! -d "$PLATFORMDIR" ]; then
+  mkdir $PLATFORMDIR
 fi
+
+read -p 'Enter the name of the machine (e.g. HackPark): ' HOST
+BOXDIR_GLOBAL=~/$PLATFORM/$HOST
 
 read -p 'Type in the IP address for the machine (e.g. 10.11.12.3): ' IP
 echo $IP | xclip -selection clipboard
 
 clear
 
-# Ping the IP from input to verify VPN/Network connectivity
+##########################
+# Functions Area
+##########################
 
-echo -e  " \n"
-echo -e "${YELLOW}-----------------------------${NC}"
-echo -e "${YELLOW}- Checking Host Connectivity - ${NC}"
-echo -e "${YELLOW}-----------------------------${NC}"
-echo -e " \n"
+#
+# directory check 
+#
 
-echo $IP > ip.txt
-if ping -q -c 1 -W 1 $IP >/dev/null; then
+f_DirectoryCheck(){
 
-        echo -e "${GREEN}Host is reachable${NC}"
-        echo -e "${GREEN}IP of host is: $IP${NC}"
+if test -d $BOXDIR_GLOBAL; then
+	echo -e "${RED}Directory already exists !${NC}"
+    read -p "Do you want to load existing notes? [y/n]" -n 1 -r 
+    echo -e "\n"                
+                    if [[ $REPLY =~ ^[Yy]$ ]]
+                    then
+                    nano $BOXDIR_GLOBAL/notes.md && rm platform.txt &&  exit 0
+                    else
+                    echo -e "\n" 
+                    echo -e "${RED}###########${NC}"
+                    echo -e "${RED}! WARNING !${NC}"
+                    echo -e "${RED}###########${NC}"
+                    echo -e "\n"
 
-
-    else
-
-# Chance to start openvpn and hit enter ping again or change ip after typo
-
-        echo -e "${RED}Host is NOT reachable${NC}"
-        read -p 'Starting VPN Connection first or type in IP again and hit enter to continue (last value = '$IP') : ' IP2
-
-        if test -z $IP2; then
-
-            echo 'pinging IP -> ' $IP''
-            if ping -q -c 1 -W 1 $IP >/dev/null;then
-            echo -e "${GREEN}Host is reachable${NC}"
-            else
-                echo -e "${RED}Host is NOT reachable! exiting....${NC}"
-                exit 0
-            fi
-
-        else
-            echo 'pinging IP again -> ' $IP2''
-            if ping -q -c 1 -W 1 $IP2 >/dev/null ; then
-                echo -e "${GREEN}Host is reachable${NC}"
-                echo $IP2 > ip.txt
-                IP=$(cat ip.txt)
-
-            else
-                echo -e "${RED}Host is NOT reachable! exiting....${NC}"
-                exit 0
-            fi
-        fi
+                    read -p "Do you want to delete the folders and start again? [y/n] " -n 1 -r 
+                
+                        if [[ $REPLY =~ ^[Yy]$ ]]
+                        then
+                        rm -rf $BOXDIR_GLOBAL
+                        else
+                        echo -e "${RED}Exiting....${NC}"
+                        exit 0
+                        fi
+                    fi
 fi
+}
+
+#
+# nmap scan
+#
+
+f_NmapDefault(){
+
+echo -e "\n"
+echo -e "${YELLOW}--------------------------------${NC}"
+echo -e "${YELLOW}-  Starting standard Nmap Scan -${NC}"
+echo -e "${YELLOW}--------------------------------${NC}"
+echo -e "\n"
+
+sleep 2
+
+nmap -sCV $IP -v -T5  -oA $BOXDIR_GLOBAL/nmap/initial
 
 
-sleep 1
+}
+
+#
+# Creating folder structure
+#
+
+
+f_CreateFolders(){
 
 # Creating the folders
 # ~/PLATFORM/
@@ -101,32 +133,87 @@ echo -e "${YELLOW}- Creating directories -${NC}"
 echo -e "${YELLOW}------------------------${NC}"
 echo -e "\n"
 
-mkdir $BOXDIR
+mkdir $BOXDIR_GLOBAL
 echo "--> Folder for room $HOST created ..."
 sleep 1
-mkdir $BOXDIR/nmap
+mkdir $BOXDIR_GLOBAL/nmap
 echo "--> nmap folder created ..."
 sleep 1
-mkdir $BOXDIR/log
+mkdir $BOXDIR_GLOBAL/log
 echo "--> log folder created ..."
-mkdir $BOXDIR/screenshots
+mkdir $BOXDIR_GLOBAL/screenshots
 echo "--> screenshots folder created ..."
 
-
-sleep 1
-
-# Starting the standard nmap command
-echo -e "\n"
-echo -e "${YELLOW}--------------------------------${NC}"
-echo -e "${YELLOW}-  Starting standard Nmap Scan -${NC}"
-echo -e "${YELLOW}--------------------------------${NC}"
-echo -e "\n"
-
-sleep 2
-
-nmap -sCV $IP -v -T5  -oA $BOXDIR/nmap/initial
+}
 
 
+#
+# Ping host to check if it is alive, if not (typo i.e.) try again with same or other IP
+#
+
+
+f_CheckHostConnectivity(){
+echo -e  " \n"
+echo -e "${YELLOW}-----------------------------${NC}"
+echo -e "${YELLOW}- Checking Host Connectivity - ${NC}"
+echo -e "${YELLOW}-----------------------------${NC}"
+echo -e " \n"
+
+echo $IP > ip.txt
+if ping -q -c 1 -W 1 $IP >/dev/null; then
+
+        echo -e "${GREEN}Host is reachable${NC}"
+        echo -e "${GREEN}IP of host is: $IP${NC}"
+        echo " "
+
+
+    else
+
+        echo -e "${RED}Host is NOT reachable${NC}"
+        read -p 'Starting VPN Connection first or type in IP again and hit enter to continue (last value = '$IP') : ' IP2
+
+        if test -z $IP2; then
+
+            echo 'pinging IP -> ' $IP''
+            if ping -q -c 1 -W 1 $IP >/dev/null;then
+            echo -e "${GREEN}Host is reachable${NC}"
+            echo " "
+            else
+                echo -e "${RED}Host is NOT reachable! exiting....${NC}"
+                exit 0
+            fi
+
+        else
+            echo 'pinging IP again -> ' $IP2''
+            if ping -q -c 1 -W 1 $IP2 >/dev/null ; then
+                echo -e "${GREEN}Host is reachable${NC}"
+                echo $IP2 > ip.txt
+                IP=$(cat ip.txt)
+                 echo " "
+
+            else
+                
+                read -p "Still not reachable. Proceed with scan anyway? [y/n]  " -n 1 -r
+                echo    # (optional) move to a new line
+                    if [[ ! $REPLY =~ ^[Yy]$ ]]
+                    then
+                     echo " "
+                    else
+                    echo -e "${RED}Host is NOT reachable! exiting....${NC}"
+                    exit 0
+                    fi
+            fi
+        fi
+fi
+
+}
+
+#
+# Create new notes and fill with content of template
+#
+
+f_CreateNotes()
+{
 echo -e "\n"
 echo -e "${YELLOW}-------------------------------${NC}"
 echo -e "${YELLOW}- Creating notes for the box  -${NC}"
@@ -136,35 +223,57 @@ echo -e "\n"
 sleep 1
 
 echo "--> Grep TCP and UDP Ports"
-egrep "tcp|udp" $BOXDIR/nmap/initial.nmap >> fillin.txt
+egrep "tcp|udp" $BOXDIR_GLOBAL/nmap/initial.nmap >> fillin.txt
 
 sleep 1
 
 echo "--> Set IP and hostname"
-echo -e "[IP]" >> $BOXDIR/notes.md
-echo -e "$IP \n" >> $BOXDIR/notes.md
-echo -e "[Host]" >> $BOXDIR/notes.md
-echo -e "$HOST \n" >> $BOXDIR/notes.md
+echo -e "[IP]" >> $BOXDIR_GLOBAL/notes.md
+echo -e "$IP \n" >> $BOXDIR_GLOBAL/notes.md
+echo -e "[Host]" >> $BOXDIR_GLOBAL/notes.md
+echo -e "$HOST \n" >> $BOXDIR_GLOBAL/notes.md
 
 sleep 1
 
 echo "--> import remaining template and files"
-cat fillin.txt >> $BOXDIR/notes.md
-cat files/notes_template.md >> $BOXDIR/notes.md
-cp files/createLists.sh $BOXDIR
-chmod +x $BOXDIR/createLists.sh
+cat fillin.txt >> $BOXDIR_GLOBAL/notes.md
+cat files/notes_template.md >> $BOXDIR_GLOBAL/notes.md
+cp files/createLists.sh $BOXDIR_GLOBAL
+chmod +x $BOXDIR_GLOBAL/createLists.sh
+}
 
 
+f_OpenNotes()
+{
+    echo -e "\n"
+    echo -e "${GREEN}FINISHED! Opening notes${NC}"
+
+sleep 4
+nano $BOXDIR_GLOBAL/notes.md
+}
+
+#
+#
+#  calling functions
+#
+#
+
+f_DirectoryCheck
+
+f_CreateFolders
+sleep 1
+
+f_CheckHostConnectivity
+sleep 1
+
+f_NmapDefault
+sleep 4
+
+f_CreateNotes
 sleep 1
 
 echo "--> Cleaning files"
-rm fillin.txt ip.txt
+rm fillin.txt ip.txt platform.txt
 
-sleep 2
-
-echo -e "\n"
-echo -e "${GREEN}FINISHED! Opening notes${NC}"
-
-sleep 4
-
-nano $BOXDIR/notes.md
+f_OpenNotes
+sleep 1
