@@ -1,17 +1,16 @@
 # RoomPrepper
 A simple script to create folders and a notes file. I use it for TryhackMe and HackTheBox
 
-Before you start make sure that the following directories exist:
-~/THM (for TryHackme)
-~/HTB (for HackTheBox)
-
 Also check out my writeups for TryHackMe / HackTheBox or Vulnhub machines --> https://writeupsforhacking.wordpress.com/
+Add me on TryHackMe --> https://tryhackme.com/p/MightyIT
 
 [Changelog:latest]
  
 - parts of script placed in functions
-- it´s possible to "load" existing notes when folders already existing of you start again by deleting it
+- no need to have the folders THM / HTB created. If you choose THM / HTB / VULN it will check existence and create them if needed
+- it´s possible to "load" existing notes when folders already existing or you start again by deleting it
 
+The folders for the platform will be created in the home directory (~/THM/BOXNAME)
 
 ## Usage:
 
