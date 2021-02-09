@@ -1,21 +1,14 @@
 #!/bin/bash
 
-# Pause for debugging
-#f_Pause(){
-#
-# read -n1 -rsp $'Press any key to continue or Ctrl+C to exit...\n'
-#
-#}
 
-
-# Before you start make sure that the following directories exist:
-# ~/THM (for TryHackme)
-# ~/HTB (for HackTheBox)
-# 
-#
 # Put the script and the folder 'files' in the same directory
 #
 # Usage: ./start_new_room
+#
+#
+# When script exited early by user or error make sure delete "platform.txt" before executing script.
+# Otherwise it will use the content and skip platform selection
+#
 #
 # Setting colored output
 RED='\033[0;31m'
@@ -53,7 +46,10 @@ read -p 'Enter the name of the machine (e.g. HackPark): ' HOST
 BOXDIR_GLOBAL=~/$PLATFORM/$HOST
 
 read -p 'Type in the IP address for the machine (e.g. 10.11.12.3): ' IP
-echo $IP | xclip -selection clipboard
+
+if [ -x "$(command -v xclip)" ]; then
+  echo $IP | xclip -selection clipboard
+fi
 
 clear
 
@@ -107,6 +103,16 @@ echo -e "${YELLOW}--------------------------------${NC}"
 echo -e "\n"
 
 sleep 2
+
+if ! [ -x "$(command -v nmap)" ]; then
+echo -e "\n"
+echo -e "${RED}--------------------------------${NC}"
+echo -e "${RED}-      nmap not installed      -${NC}"
+echo -e "${RED}--------------------------------${NC}"
+echo -e "\n"
+exit 0
+fi
+
 
 nmap -sCV $IP -v -T5  -oA $BOXDIR_GLOBAL/nmap/initial
 
