@@ -2,6 +2,7 @@
 A simple script to create folders and a notes file. I use it for TryhackMe and HackTheBox
 
 Also check out my writeups for TryHackMe / HackTheBox or Vulnhub machines --> https://writeupsforhacking.wordpress.com/
+
 Add me on TryHackMe --> https://tryhackme.com/p/MightyIT
 
 [Changelog:latest]
