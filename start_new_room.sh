@@ -69,7 +69,10 @@ if test -d $BOXDIR_GLOBAL; then
     echo -e "\n"                
                     if [[ $REPLY =~ ^[Yy]$ ]]
                     then
-                    nano $BOXDIR_GLOBAL/notes.md && rm platform.txt &&  exit 0
+                    sed -i "2c$IP" $BOXDIR_GLOBAL/notes.md
+                    rm platform.txt
+                    nano $BOXDIR_GLOBAL/notes.md && exit 0
+                    
                     else
                     echo -e "\n" 
                     echo -e "${RED}###########${NC}"
@@ -282,4 +285,4 @@ echo "--> Cleaning files"
 rm fillin.txt ip.txt platform.txt
 
 f_OpenNotes
-sleep 1
+exit 0
