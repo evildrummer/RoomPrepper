@@ -7,6 +7,7 @@ Add me on TryHackMe --> https://tryhackme.com/p/MightyIT
 
 [Changelog:latest]
  
+- When opening existing notes.md the IP will be updated from the input at start (IPs at TryHackMe boxes changes after redeploy)
 - parts of script placed in functions
 - no need to have the folders THM / HTB created. If you choose THM / HTB / VULN it will check existence and create them if needed
 - it´s possible to "load" existing notes when folders already existing or you start again by deleting it
