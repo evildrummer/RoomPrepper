@@ -1,6 +1,6 @@
 
 
-### Fill in usernames and passwords here for creating a wordlist with createList.sh
+### Fill in usernames and passwords here for creating a wordlist with ./createList.sh
 #usernames
 bob
 #end
