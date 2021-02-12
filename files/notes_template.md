@@ -13,7 +13,7 @@ princess
 
 
 
-### hidden diretories/files
+### hidden directories/files
 /admin
 
 
