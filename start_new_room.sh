@@ -3,7 +3,7 @@
 
 # Put the script and the folder 'files' in the same directory
 #
-# Usage: ./start_new_room
+# Usage: ./start_new_room.sh
 #
 #
 # When script exited early by user or error make sure delete "platform.txt" before executing script.
@@ -37,13 +37,13 @@ while [ ! -f platform.txt ]; do
 done
 
 PLATFORM=$(cat platform.txt)
-PLATFORMDIR=~/$PLATFORM
+PLATFORMDIR=~/writeups/$PLATFORM
 if [ ! -d "$PLATFORMDIR" ]; then
-  mkdir $PLATFORMDIR
+  mkdir -p $PLATFORMDIR
 fi
 
 read -p 'Enter the name of the machine (e.g. HackPark): ' HOST
-BOXDIR_GLOBAL=~/$PLATFORM/$HOST
+BOXDIR_GLOBAL=$PLATFORMDIR/$HOST
 
 read -p 'Type in the IP address for the machine (e.g. 10.11.12.3): ' IP
 
@@ -71,7 +71,7 @@ if test -d $BOXDIR_GLOBAL; then
                     then
                     sed -i "2c$IP" $BOXDIR_GLOBAL/notes.md
                     rm platform.txt
-                    nano $BOXDIR_GLOBAL/notes.md && exit 0
+                    vim $BOXDIR_GLOBAL/notes.md && exit 0
                     
                     else
                     echo -e "\n" 
@@ -188,8 +188,15 @@ if ping -q -c 1 -W 1 $IP >/dev/null; then
             echo -e "${GREEN}Host is reachable${NC}"
             echo " "
             else
-                echo -e "${RED}Host is NOT reachable! exiting....${NC}"
-                exit 0
+                echo -e "${RED}Host is NOT reachable! \n${NC}"
+                read -p 'ICMP might be disabled. Do you want to continue or cancel script: [C]ontinue [E]xit: ' -a array
+                for choice in "${array[@]}"; do
+                    case "$choice" in
+                        [Cc]* ) echo -e "Selected $choice to continue" && break;;
+                        [Ee]* ) echo "exited by user" && exit 0;;
+                        * ) echo "404 - Option not found" && exit 0;;
+                    esac
+                done
             fi
 
         else
@@ -258,7 +265,7 @@ f_OpenNotes()
     echo -e "${GREEN}FINISHED! Opening notes${NC}"
 
 sleep 4
-nano $BOXDIR_GLOBAL/notes.md
+vim $BOXDIR_GLOBAL/notes.md
 }
 
 #
