@@ -3,7 +3,7 @@
 
 # Put the script and the folder 'files' in the same directory
 #
-# Usage: ./start_new_room.sh
+# Usage: ./start_new_room
 #
 #
 # When script exited early by user or error make sure delete "platform.txt" before executing script.
@@ -37,13 +37,13 @@ while [ ! -f platform.txt ]; do
 done
 
 PLATFORM=$(cat platform.txt)
-PLATFORMDIR=~/writeups/$PLATFORM
+PLATFORMDIR=~/$PLATFORM
 if [ ! -d "$PLATFORMDIR" ]; then
-  mkdir -p $PLATFORMDIR
+  mkdir $PLATFORMDIR
 fi
 
 read -p 'Enter the name of the machine (e.g. HackPark): ' HOST
-BOXDIR_GLOBAL=$PLATFORMDIR/$HOST
+BOXDIR_GLOBAL=~/$PLATFORM/$HOST
 
 read -p 'Type in the IP address for the machine (e.g. 10.11.12.3): ' IP
 
@@ -71,7 +71,7 @@ if test -d $BOXDIR_GLOBAL; then
                     then
                     sed -i "2c$IP" $BOXDIR_GLOBAL/notes.md
                     rm platform.txt
-                    vim $BOXDIR_GLOBAL/notes.md && exit 0
+                    nano $BOXDIR_GLOBAL/notes.md && exit 0
                     
                     else
                     echo -e "\n" 
@@ -174,8 +174,7 @@ if ping -q -c 1 -W 1 $IP >/dev/null; then
         echo -e "${GREEN}Host is reachable${NC}"
         echo -e "${GREEN}IP of host is: $IP${NC}"
         echo " "
-
-
+        
     else
 
         echo -e "${RED}Host is NOT reachable${NC}"
@@ -188,6 +187,7 @@ if ping -q -c 1 -W 1 $IP >/dev/null; then
             echo -e "${GREEN}Host is reachable${NC}"
             echo " "
             else
+                echo -e "${RED}Host is NOT reachable!${NC}"
                 echo -e "${RED}Host is NOT reachable! \n${NC}"
                 read -p 'ICMP might be disabled. Do you want to continue or cancel script: [C]ontinue [E]xit: ' -a array
                 for choice in "${array[@]}"; do
@@ -265,7 +265,7 @@ f_OpenNotes()
     echo -e "${GREEN}FINISHED! Opening notes${NC}"
 
 sleep 4
-vim $BOXDIR_GLOBAL/notes.md
+nano $BOXDIR_GLOBAL/notes.md
 }
 
 #
