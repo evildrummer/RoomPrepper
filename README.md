@@ -1,22 +1,21 @@
 # RoomPrepper
 A simple script to create folders and a notes file. I use it for TryhackMe and HackTheBox
 
-Also check out my writeups for TryHackMe / HackTheBox or Vulnhub machines --> https://writeupsforhacking.wordpress.com/
+Also check out my writeups for TryHackMe / HackTheBox or Vulnhub machines --> https://www.luceast.de/blog/
 
-Add me on TryHackMe --> https://tryhackme.com/p/MightyIT
+Add me on TryHackMe --> https://tryhackme.com/p/LucEast
 
 [Changelog:latest]
  
-- When opening existing notes.md the IP will be updated from the input at start (IPs at TryHackMe boxes changes after redeploy)
-- parts of script placed in functions
-- no need to have the folders THM / HTB created. If you choose THM / HTB / VULN it will check existence and create them if needed
-- it´s possible to "load" existing notes when folders already existing or you start again by deleting it
+- added option to continue even if ICMP is disabled on target
+- changed default editor from nano to vim
+- added parnet folder "writeups"
 
-The folders for the platform will be created in the home directory (~/THM/BOXNAME)
+The folders for the platform will be created in the home directory (~/writeups/PLATFORM/BOXNAME)
 
 ## Usage:
 
-./start_new_room  
+./start_new_room.sh 
 ./createLists.sh (to create a user.lst & password.lst out of your notes.md)
 
 ## Screen with example input
@@ -32,7 +31,7 @@ The folders for the platform will be created in the home directory (~/THM/BOXNAM
 ![Screenshot](images/notes.png)
 
 
-It´s super handy when you use terminator with split screen layout. So you can start with gobuster and other tools.
+It´s super handy when you use terminator/tmux or konsole with split screen layout. So you can start with gobuster and other tools.
 
 ![Screenshot](images/terminator.png)
 
