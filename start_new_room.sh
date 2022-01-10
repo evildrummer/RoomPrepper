@@ -174,8 +174,7 @@ if ping -q -c 1 -W 1 $IP >/dev/null; then
         echo -e "${GREEN}Host is reachable${NC}"
         echo -e "${GREEN}IP of host is: $IP${NC}"
         echo " "
-
-
+        
     else
 
         echo -e "${RED}Host is NOT reachable${NC}"
@@ -188,8 +187,16 @@ if ping -q -c 1 -W 1 $IP >/dev/null; then
             echo -e "${GREEN}Host is reachable${NC}"
             echo " "
             else
-                echo -e "${RED}Host is NOT reachable! exiting....${NC}"
-                exit 0
+                echo -e "${RED}Host is NOT reachable!${NC}"
+                echo -e "${RED}Host is NOT reachable! \n${NC}"
+                read -p 'ICMP might be disabled. Do you want to continue or cancel script: [C]ontinue [E]xit: ' -a array
+                for choice in "${array[@]}"; do
+                    case "$choice" in
+                        [Cc]* ) echo -e "Selected $choice to continue" && break;;
+                        [Ee]* ) echo "exited by user" && exit 0;;
+                        * ) echo "404 - Option not found" && exit 0;;
+                    esac
+                done
             fi
 
         else
